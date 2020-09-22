@@ -8,11 +8,12 @@ namespace ConsoleApp2
 {
     class Algorithm
     {
-        public int Pttrai;
-        public int Ptphai;
-        public int temp;
-        public int[] array;
-        public int Sophantu;
+        protected int Pttrai;
+        protected int Ptphai;
+        protected int temp;
+        protected int[] array;
+        private int Sophantu;
+        private Stopwatch st = new Stopwatch();
         public void NotArrange()
         {
             Console.WriteLine("Mời bạn nhập số phần từ");
@@ -25,15 +26,18 @@ namespace ConsoleApp2
                 array[Pttrai] = rd.Next(0, 100);
                 Console.Write(" " + array[Pttrai]);
             }
+            st.Start();
         }
 
         public void Arranged()
         {
+            st.Stop();
             Console.WriteLine("\nIn ra dãy số đã sắp xếp");
             for (Pttrai = 0; Pttrai < array.Length; Pttrai++)
             {
                 Console.Write(" " + array[Pttrai]);
             }
+            Console.WriteLine("\nThời gian thực hiện thuật toán: {0}miliSecond", st.Elapsed.Milliseconds);
         }
     }
     class Select : Algorithm
@@ -78,6 +82,27 @@ namespace ConsoleApp2
             base.Arranged();
         }
     }
+
+    class Bubble : Algorithm
+    {
+        public void NoiBot()
+        {
+            base.NotArrange();
+            for (Pttrai = 0; Ptphai < array.Length - 1; Pttrai++)
+            {
+                for (Ptphai = array.Length - 1; Ptphai > Pttrai; Ptphai--) //so sánh bắt đầu vị trí array.length - 1
+                {
+                    if (array[Ptphai] > array[Ptphai - 1])
+                    {
+                        temp = array[Ptphai];
+                        array[Ptphai] = array[Ptphai - 1];
+                        array[Ptphai - 1] = temp;
+                    }
+                }
+            }
+            base.Arranged();
+        }
+    }
     class Program
     {
         private static void ListAlgorithm() //in danh sách các thuật toán
@@ -111,6 +136,10 @@ namespace ConsoleApp2
                 case 2:
                     Insert chen = new Insert();
                     chen.Chen();
+                    break;
+                case 3:
+                    Bubble BB = new Bubble();
+                    BB.NoiBot();
                     break;
             }
         }
