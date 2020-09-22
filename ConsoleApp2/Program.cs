@@ -14,7 +14,6 @@ namespace ConsoleApp2
         protected int[] array;
         private int Sophantu;
         private Stopwatch st = new Stopwatch();
-
         public void NotArrange()
         {
             Console.WriteLine("Mời bạn nhập số phần từ");
@@ -38,7 +37,7 @@ namespace ConsoleApp2
             {
                 Console.Write(" " + array[Pttrai]);
             }
-            Console.WriteLine("\nThời gian thực hiện thuật toán: {0}miliSecond", st.Elapsed.Milliseconds);
+            Console.WriteLine("\nThời gian thực hiện thuật toán: {0}", st.Elapsed.ToString());
         }
     }
     class Select : BasicAlgorithm
@@ -108,18 +107,19 @@ namespace ConsoleApp2
 
     class Program
     {
-        private static void QuickSort(int[] A, int Trai, int Phai)
+        public static void QuickSort(int[] A, int Trai, int Phai)
         {
+            Stopwatch st = new Stopwatch();
             int temp, x;
-            int Pttrai, Ptphai;
+            int Pttrai, Ptphai; //tạo 2 biến nằm ở vị trí 2 biên
             Pttrai = Trai;
             Ptphai = Phai;
-            x = A[Trai];
+            x = A[Trai]; // x lấy giá trị trái đầu tiên trong mảng
             do
             {
-                while (Pttrai < Phai && A[Pttrai] < x)
+                while (Pttrai < Phai && A[Pttrai] < x) // biến nằm ở biên trái tăng dần nếu giá trị trong mảng nhỏ hơn X và giới hạn ở biên phải Phai
                     Pttrai++;
-                while (Ptphai > Trai && A[Ptphai] > x)
+                while (Ptphai > Trai && A[Ptphai] > x) // biến nằm ở bên phải giảm dần nếu giá trị lớn trong mảng lớn hơn X và giới gạn ở biên Trai
                     Ptphai--;
                 if (Pttrai <= Ptphai)
                 {
@@ -136,13 +136,66 @@ namespace ConsoleApp2
                 if (Pttrai < Phai) QuickSort(A, Pttrai, Phai);
             }
         }
+
+        public static void Swap(int[] array, int Trai, int Giua, int Phai)
+        {
+            int Pttrai = Trai;
+            int Ptphai = Giua + 1;
+            int i = 0; //giá trị biến của mảng phụ
+            int G = Phai - Trai + 1; //Xác định điểm giữa của mảng
+            int[] B = new int[G];
+            while ((Pttrai < Giua + 1) && (Ptphai < Phai + 1))
+            {
+                if (array[Pttrai] < array[Ptphai])
+                {
+                    B[i] = array[Pttrai];
+                    Pttrai++; i++;
+                }
+                else
+                {
+                    B[i] = array[Ptphai];
+                    Ptphai++; i++;
+                }
+            }
+            while (Pttrai < Giua + 1)
+            {
+                B[i] = array[Pttrai];
+                i++; Pttrai++;
+            }
+            while (Ptphai < Phai + 1)
+            {
+                B[i] = array[Ptphai];
+                i++; Ptphai++;
+            }
+            Pttrai = Trai;
+            for (i = 0; i < G; i++)
+            {
+                array[Pttrai] = B[i];
+                Pttrai++;
+            }
+            
+        }
+
+        public static void Tron(int[] array, int Trai, int Phai)
+        {
+            int Giua;
+            if (Phai <= Trai) //đệ quy đến khi 2 biên trái - phải gặp nhau thì dừng
+                return;
+            Giua = (Trai + Phai) / 2; //chia mảng lớn thành 2 mảng nhỏ
+            Tron(array, Trai, Giua);
+            Tron(array, Giua + 1, Phai);
+            Swap(array, Trai, Giua, Phai);
+        }
         private static void ListAlgorithm() //in danh sách các thuật toán
         {
+            Stopwatch st = new Stopwatch();
+            int Pttrai;
             int chon;
+            int SoPt;
             int i = 1;
             bool test;
             Console.WriteLine("Danh sách cách thuật toán cơ bản");
-            string[] Danhsach = { "Insert Sort", "Select Sort", "Buble Sort", "Quick Sort" };
+            string[] Danhsach = { "Insert Sort", "Select Sort", "Buble Sort", "Quick Sort", "Merge Sort" };
             foreach (var item in Danhsach)
             {
                 Console.WriteLine("{0}: " + item, i++);
@@ -173,23 +226,46 @@ namespace ConsoleApp2
                     BB.NoiBot();
                     break;
                 case 4:
-                    int Pttrai;
-                    Random rd = new Random();
                     Console.WriteLine("Nhập số phần từ trong mảng");
-                    int Sophantu = Int32.Parse(Console.ReadLine());
-                    int[] A = new int[Sophantu];
+                    SoPt = Int32.Parse(Console.ReadLine());
+                    int[] A = new int[SoPt];
                     Console.WriteLine("Mảng chưa được sắp xếp");
                     for (Pttrai = 0; Pttrai < A.Length; Pttrai++)
                     {
+                        Random rd = new Random();
                         A[Pttrai] = rd.Next(0, 100);
                         Console.Write(" " + A[Pttrai]);
                     }
+                    st.Start();
                     QuickSort(A, 0, A.Length - 1);
+                    st.Stop();
                     Console.WriteLine("\nMảng đã được sắp xếp");
                     for (Pttrai = 0; Pttrai < A.Length; Pttrai++)
                     {
                         Console.Write(" " + A[Pttrai]);
                     }
+                    Console.WriteLine("\nThời gian thực hiện thuật toán: {0}", st.Elapsed.ToString());
+                    break;
+                case 5:
+                    Console.WriteLine("Nhập số phần từ trong mảng");
+                    SoPt = Int32.Parse(Console.ReadLine());
+                    int[] array = new int[SoPt];
+                    Console.WriteLine("Mảng chưa được sắp xếp");
+                    for (Pttrai = 0; Pttrai < array.Length; Pttrai++)
+                    {
+                        Random rd = new Random();
+                        array[Pttrai] = rd.Next(0, 100);
+                        Console.Write(" " + array[Pttrai]);
+                    }
+                    st.Start();
+                    Tron(array, 0, array.Length - 1);
+                    st.Stop();
+                    Console.WriteLine("\nMảng đã được sắp xếp");
+                    for (Pttrai = 0; Pttrai < array.Length; Pttrai++)
+                    {
+                        Console.Write(" " + array[Pttrai]);
+                    }
+                    Console.WriteLine("\nThời gian thực hiện thuật toán: {0}", st.Elapsed.ToString());
                     break;
             }
         }
