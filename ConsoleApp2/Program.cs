@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace ConsoleApp2
 {
-    class Algorithm
+    class BasicAlgorithm
     {
         protected int Pttrai;
         protected int Ptphai;
@@ -14,6 +14,7 @@ namespace ConsoleApp2
         protected int[] array;
         private int Sophantu;
         private Stopwatch st = new Stopwatch();
+
         public void NotArrange()
         {
             Console.WriteLine("Mời bạn nhập số phần từ");
@@ -40,7 +41,7 @@ namespace ConsoleApp2
             Console.WriteLine("\nThời gian thực hiện thuật toán: {0}miliSecond", st.Elapsed.Milliseconds);
         }
     }
-    class Select : Algorithm
+    class Select : BasicAlgorithm
     {
         public void Selection()
         {
@@ -62,7 +63,7 @@ namespace ConsoleApp2
         }
     }
 
-    class Insert : Algorithm
+    class Insert : BasicAlgorithm
     {
         public void Chen()
         {
@@ -83,7 +84,7 @@ namespace ConsoleApp2
         }
     }
 
-    class Bubble : Algorithm
+    class Bubble : BasicAlgorithm
     {
         public void NoiBot()
         {
@@ -103,15 +104,45 @@ namespace ConsoleApp2
             base.Arranged();
         }
     }
+
+
     class Program
     {
+        private static void QuickSort(int[] A, int Trai, int Phai)
+        {
+            int temp, x;
+            int Pttrai, Ptphai;
+            Pttrai = Trai;
+            Ptphai = Phai;
+            x = A[Trai];
+            do
+            {
+                while (Pttrai < Phai && A[Pttrai] < x)
+                    Pttrai++;
+                while (Ptphai > Trai && A[Ptphai] > x)
+                    Ptphai--;
+                if (Pttrai <= Ptphai)
+                {
+                    temp = A[Pttrai];
+                    A[Pttrai] = A[Ptphai];
+                    A[Ptphai] = temp;
+                    Pttrai++;
+                    Ptphai--;
+                }
+            }
+            while (Pttrai <= Ptphai);
+            {
+                if (Trai < Ptphai) QuickSort(A, Trai, Ptphai);
+                if (Pttrai < Phai) QuickSort(A, Pttrai, Phai);
+            }
+        }
         private static void ListAlgorithm() //in danh sách các thuật toán
         {
             int chon;
             int i = 1;
             bool test;
             Console.WriteLine("Danh sách cách thuật toán cơ bản");
-            string[] Danhsach = { "Insert Sort", "Select Sort", "Buble Sort" };
+            string[] Danhsach = { "Insert Sort", "Select Sort", "Buble Sort", "Quick Sort" };
             foreach (var item in Danhsach)
             {
                 Console.WriteLine("{0}: " + item, i++);
@@ -140,6 +171,25 @@ namespace ConsoleApp2
                 case 3:
                     Bubble BB = new Bubble();
                     BB.NoiBot();
+                    break;
+                case 4:
+                    int Pttrai;
+                    Random rd = new Random();
+                    Console.WriteLine("Nhập số phần từ trong mảng");
+                    int Sophantu = Int32.Parse(Console.ReadLine());
+                    int[] A = new int[Sophantu];
+                    Console.WriteLine("Mảng chưa được sắp xếp");
+                    for (Pttrai = 0; Pttrai < A.Length; Pttrai++)
+                    {
+                        A[Pttrai] = rd.Next(0, 100);
+                        Console.Write(" " + A[Pttrai]);
+                    }
+                    QuickSort(A, 0, A.Length - 1);
+                    Console.WriteLine("\nMảng đã được sắp xếp");
+                    for (Pttrai = 0; Pttrai < A.Length; Pttrai++)
+                    {
+                        Console.Write(" " + A[Pttrai]);
+                    }
                     break;
             }
         }
